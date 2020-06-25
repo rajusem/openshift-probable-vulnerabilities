@@ -14,7 +14,7 @@ from utils import aws_utils as aws
 from utils import cloud_constants as cc
 from utils.bq_utils import get_bq_data_for_inference
 from utils.storage_utils import write_output_csv
-from utils.api_util import save_data_to_db, report_failures, read_probable_cve_data
+from utils.api_util import save_data_to_db, report_failures
 
 daiquiri.setup(level=logging.INFO)
 _logger = daiquiri.getLogger(__name__)
@@ -48,7 +48,7 @@ def main():
 
     df = get_bq_data_for_inference(ECOSYSTEM, day_count, date_range)
     df = run_inference(df, CVE_MODEL_TYPE)
-    write_output_csv(
+    df = write_output_csv(
         start_time,
         end_time,
         cve_model_type=CVE_MODEL_TYPE,
@@ -59,8 +59,7 @@ def main():
 
     # Save data to database using api server
     if not cc.SKIP_INSERT_API_CALL:
-        probable_cve_data = read_probable_cve_data(start_time, end_time, CVE_MODEL_TYPE, S3_UPLOAD, ECOSYSTEM)
-        updated_df, failed_to_insert = save_data_to_db(probable_cve_data, ECOSYSTEM)
+        updated_df, failed_to_insert = save_data_to_db(df, ECOSYSTEM)
         # Save data to csv file those are failed to ingest
         if len(failed_to_insert) > 0:
             report_failures(updated_df, failed_to_insert, start_time, end_time, S3_UPLOAD, ECOSYSTEM)

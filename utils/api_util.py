@@ -3,14 +3,13 @@
 import asyncio
 import json
 import logging
-import os
 
 import daiquiri
 import pandas as pd
 from aiohttp import ClientSession
 
 from utils import cloud_constants as cc
-from utils.storage_utils import get_file_prefix, save_data_to_csv
+from utils.storage_utils import save_data_to_csv
 
 log = daiquiri.getLogger(level=logging.INFO)
 
@@ -116,22 +115,3 @@ def save_data_to_db(df: pd.DataFrame, ecosystem: str):
         loop.close()
     return df, failed_to_insert
 
-
-def read_probable_cve_data(start_time, end_time, cve_model_type: str, s3_upload: bool, ecosystem: str):
-    """Read Probable CVE data from the file."""
-    triage_subdir = _get_triage_subdir(start_time, end_time)
-    triage_results_dir = os.path.join(cc.BASE_TRIAGE_DIR, triage_subdir)
-    file_prefix = get_file_prefix(cve_model_type)
-    filename = cc.OUTPUT_FILE_NAME.format(data_type=cc.PROBABLE_CVES, file_prefix=file_prefix,
-                                          triage_dir=triage_subdir, ecosystem=ecosystem)
-    dataset = os.path.join(triage_results_dir, filename)
-
-    if not s3_upload:
-        log.info("Reading {} dataset from local folder: {}".format(cc.PROBABLE_CVES, dataset))
-        df = pd.read_csv(dataset, index_col=None, header=0)
-    else:
-        s3_path = cc.S3_FILE_PATH.format(bucket_name=cc.S3_BUCKET_NAME_INFERENCE, triage_dir=triage_subdir,
-                                         dataset_filename=filename)
-        log.info("Reading {} dataset from ".format(cc.PROBABLE_CVES, s3_path))
-        df = pd.read_csv(s3_path, index_col=None, header=0)
-    return df

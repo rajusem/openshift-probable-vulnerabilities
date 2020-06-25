@@ -6,7 +6,7 @@ import arrow
 import pandas as pd
 from aiohttp import ClientSession
 
-from utils.api_util import save_data_to_db, report_failures, read_probable_cve_data
+from utils.api_util import save_data_to_db, report_failures
 
 
 class MockResponse:
@@ -93,14 +93,3 @@ class APIUtilTestCase(TestCase):
 
         # Check to_csv method should be called to save failed record as csv file
         save_data_to_csv_call.assert_called()
-
-    @patch("pandas.read_csv", return_value=pd.read_csv('tests/test_data/sample_probable_cve_data.csv'))
-    def test_read_probable_cve_data(self, mock_data):
-        """Test read_probable_cve_data method."""
-        # assert mocked data/call
-        assert pd.read_csv is mock_data
-
-        df = read_probable_cve_data(self.start, self.end, "bert", True, "openshift")
-
-        # assert data count
-        assert 5 == len(df)
