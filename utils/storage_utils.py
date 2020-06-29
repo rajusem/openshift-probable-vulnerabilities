@@ -53,6 +53,8 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
         "closed_at",
         "creator_name",
         "creator_url",
+        "title",
+        "body"
     ]
     df = df[columns]
     df.loc[:, "ecosystem"] = ecosystem
