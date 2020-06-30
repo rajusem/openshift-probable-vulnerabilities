@@ -35,8 +35,6 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
     df["triage_is_security"] = 0
     df["triage_is_cve"] = 0
     df["triage_feedback_comments"] = ""
-    df["title"] = "test title"
-    df["body"] = "test body"
     columns = [
         "repo_name",
         "event_type",
