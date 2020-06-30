@@ -35,6 +35,8 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
     df["triage_is_security"] = 0
     df["triage_is_cve"] = 0
     df["triage_feedback_comments"] = ""
+    df['title'] = df['title'].apply(lambda x: x.encode('ascii', 'ignore').decode('ascii'))
+    df['body'] = df['body'].apply(lambda x: x.encode('ascii', 'ignore').decode('ascii'))
     columns = [
         "repo_name",
         "event_type",
@@ -90,9 +92,9 @@ def save_data_to_csv(df, s3_upload, file_prefix, new_triage_subdir, ecosystem, d
     if not s3_upload:
         dataset = os.path.join(new_triage_results_dir, filename)
         _logger.info("Saving {} dataset locally:{}".format(data_type, dataset))
-        df.to_csv(dataset, index=False, encoding='utf-8')
+        df.to_csv(dataset, index=False)
     else:
         s3_path = cc.S3_FILE_PATH.format(bucket_name=cc.S3_BUCKET_NAME_INFERENCE, triage_dir=new_triage_subdir,
                                          dataset_filename=filename)
-        df.to_csv(s3_path, index=False, encoding='utf-8')
+        df.to_csv(s3_path, index=False)
         _logger.info("Saving {} dataset to {}".format(data_type, s3_path))
