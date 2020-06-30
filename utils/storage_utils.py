@@ -35,8 +35,8 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
     df["triage_is_security"] = 0
     df["triage_is_cve"] = 0
     df["triage_feedback_comments"] = ""
-    df['title'] = df['title'].apply(lambda x: x.encode('ascii', 'ignore').decode('ascii'))
-    df['body'] = df['body'].apply(lambda x: x.encode('ascii', 'ignore').decode('ascii'))
+    df.loc[:, "title"] = df.apply(lambda x: _encode_str_data(x['title']), axis=1)
+    df.loc[:, "body"] = df.apply(lambda x: _encode_str_data(x['body']), axis=1)
     columns = [
         "repo_name",
         "event_type",
@@ -71,6 +71,11 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
     save_data_to_csv(df, s3_upload, file_prefix, new_triage_subdir, ecosystem, cc.PROBABLE_CVES)
 
     return df
+
+
+def _encode_str_data(data: str) -> str:
+    """Encode String data."""
+    return data.encode('ascii', 'ignore').decode('ascii') if data is not None else None
 
 
 def get_file_prefix(cve_model_type: str) -> str:
