@@ -75,7 +75,8 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
 
 def _encode_str_data(data: str) -> str:
     """Encode String data."""
-    return data.encode('ascii', 'ignore').decode('ascii') if data is not None else None
+    return data.encode('utf8').decode('utf-8') if data is not None else None
+    # return data.encode('ascii', 'ignore').decode('ascii') if data is not None else None
 
 
 def get_file_prefix(cve_model_type: str) -> str:
