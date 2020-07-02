@@ -35,8 +35,9 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
     df["triage_is_security"] = 0
     df["triage_is_cve"] = 0
     df["triage_feedback_comments"] = ""
-    df.loc[:, "title"] = df.apply(lambda x: _encode_str_data(x['title']), axis=1)
-    df.loc[:, "body"] = df.apply(lambda x: _encode_str_data(x['body']), axis=1)
+    df.loc[:, "ecosystem"] = ecosystem
+    df.loc[:, "title"] = df.apply(lambda x: _handle_unicode_str_data(x['title']), axis=1)
+    df.loc[:, "body"] = df.apply(lambda x: _handle_unicode_str_data(x['body']), axis=1)
     columns = [
         "repo_name",
         "event_type",
@@ -55,11 +56,11 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
         "closed_at",
         "creator_name",
         "creator_url",
+        "ecosystem",
         "title",
         "body"
     ]
     df = df[columns]
-    df.loc[:, "ecosystem"] = ecosystem
     save_data_to_csv(df, s3_upload, file_prefix, new_triage_subdir, ecosystem, cc.FULL_OUTPUT)
 
     # Now save the probable securities dataset.
@@ -73,10 +74,9 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
     return df
 
 
-def _encode_str_data(data: str) -> str:
-    """Encode String data."""
-    return data.encode('utf8').decode('utf-8') if data is not None else None
-    # return data.encode('ascii', 'ignore').decode('ascii') if data is not None else None
+def _handle_unicode_str_data(data: str) -> str:
+    """Handle unicode changaracter by encoding/decoding string with ascii."""
+    return data.encode('ascii', 'ignore').decode('ascii') if data is not None else None
 
 
 def get_file_prefix(cve_model_type: str) -> str:

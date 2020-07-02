@@ -68,6 +68,8 @@ class TestStorageUtils(TestCase):
                 "creator_name",
                 "creator_url",
                 "ecosystem",
+                "title",
+                "body"
             },
         )
 
