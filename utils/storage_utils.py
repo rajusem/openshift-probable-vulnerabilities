@@ -37,8 +37,8 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
     df["triage_is_cve"] = 0
     df["triage_feedback_comments"] = ""
     df.loc[:, "ecosystem"] = ecosystem
-    df['title'] = "test"
-    df['body'] = "body"
+    # df['title'] = "test"
+    # df['body'] = "body"
     # df.loc[:, "title"] = df.apply(lambda x: _handle_unicode_str_data(x['title']), axis=1)
     # df.loc[:, "body"] = df.apply(lambda x: _handle_unicode_str_data(x['body']), axis=1)
     columns = [
@@ -61,9 +61,7 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
         "creator_url",
         "ecosystem",
         "title",
-        "body",
-        "norm_description",
-        "description"
+        "body"
     ]
     df = df[columns]
 
