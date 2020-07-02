@@ -3,7 +3,7 @@ import logging
 import os
 
 import daiquiri
-import panda as pd
+import pandas as pd
 
 from utils import cloud_constants as cc
 
