@@ -10,6 +10,7 @@ import pandas as pd
 from google.cloud import bigquery
 
 from utils import bq_client_helper as bq_helper, cloud_constants as cc
+from utils.storage_utils import save_data_to_csv
 
 daiquiri.setup(level=logging.INFO)
 _logger = daiquiri.getLogger(__name__)
@@ -356,6 +357,10 @@ def get_bq_data_for_inference(ecosystem, day_count, date_range) -> pd.DataFrame:
         drop=True
     )
     df = df[cols]
+
+    _logger.info("Copleted getting data for the big query")
+    save_data_to_csv(df, True, "bq_data", "test", ecosystem, "bq_dump")
+    _logger.info("Saved bq data to s3 completed")
 
     if df.empty:
         _logger.warn("Nothing to predict today :)")
