@@ -3,6 +3,7 @@ import logging
 import os
 
 import daiquiri
+import panda as pd
 
 from utils import cloud_constants as cc
 
@@ -36,8 +37,8 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
     df["triage_is_cve"] = 0
     df["triage_feedback_comments"] = ""
     df.loc[:, "ecosystem"] = ecosystem
-    df.loc[:, "title"] = df.apply(lambda x: _handle_unicode_str_data(x['title']), axis=1)
-    df.loc[:, "body"] = df.apply(lambda x: _handle_unicode_str_data(x['body']), axis=1)
+    # df.loc[:, "title"] = df.apply(lambda x: _handle_unicode_str_data(x['title']), axis=1)
+    # df.loc[:, "body"] = df.apply(lambda x: _handle_unicode_str_data(x['body']), axis=1)
     columns = [
         "repo_name",
         "event_type",
@@ -61,6 +62,9 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
         "body"
     ]
     df = df[columns]
+
+    pd.set_option('display.max_columns', None)
+    print(df.head(100).to_string())
     save_data_to_csv(df, s3_upload, file_prefix, new_triage_subdir, ecosystem, cc.FULL_OUTPUT)
 
     # Now save the probable securities dataset.
