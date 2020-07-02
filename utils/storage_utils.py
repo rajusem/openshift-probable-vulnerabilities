@@ -32,11 +32,13 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
                 "Using Existing Model Inference Directory: {}".format(new_triage_results_dir)
             )
 
-    df.drop(["norm_description", "description"], inplace=True, errors="ignore", axis=1)
+    # df.drop(["norm_description", "description"], inplace=True, errors="ignore", axis=1)
     df["triage_is_security"] = 0
     df["triage_is_cve"] = 0
     df["triage_feedback_comments"] = ""
     df.loc[:, "ecosystem"] = ecosystem
+    df['title'] = "test"
+    df['body'] = "body"
     # df.loc[:, "title"] = df.apply(lambda x: _handle_unicode_str_data(x['title']), axis=1)
     # df.loc[:, "body"] = df.apply(lambda x: _handle_unicode_str_data(x['body']), axis=1)
     columns = [
@@ -59,12 +61,15 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
         "creator_url",
         "ecosystem",
         "title",
-        "body"
+        "body",
+        "norm_description",
+        "description"
     ]
     df = df[columns]
 
     pd.set_option('display.max_columns', None)
-    print(df.head(100).to_string())
+    _logger.info(df.head(100).to_string())
+
     save_data_to_csv(df, s3_upload, file_prefix, new_triage_subdir, ecosystem, cc.FULL_OUTPUT)
 
     # Now save the probable securities dataset.
