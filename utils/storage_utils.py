@@ -4,6 +4,7 @@ import os
 
 import daiquiri
 import pandas as pd
+from numpy import unicode
 
 from utils import cloud_constants as cc
 
@@ -39,8 +40,8 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
     df.loc[:, "ecosystem"] = ecosystem
     # df['title'] = "test"
     # df['body'] = "body"
-    # df.loc[:, "title"] = df.apply(lambda x: _handle_unicode_str_data(x['title']), axis=1)
-    # df.loc[:, "body"] = df.apply(lambda x: _handle_unicode_str_data(x['body']), axis=1)
+    df.loc[:, "title"] = df.apply(lambda x: _handle_unicode_str_data(x['title']), axis=1)
+    df.loc[:, "body"] = df.apply(lambda x: _handle_unicode_str_data(x['body']), axis=1)
     columns = [
         "repo_name",
         "event_type",
@@ -81,8 +82,14 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
     return df
 
 
-def _handle_unicode_str_data(data: str) -> str:
+def _handle_unicode_str_data(data) -> str:
     """Handle unicode changaracter by encoding/decoding string with ascii."""
+    if isinstance(data, str):
+        _logger.info("ordinary string {}".format(data))
+    elif isinstance(data, unicode):
+        _logger.info("unicode string {}".format(data))
+    else:
+        _logger.info("not a string {}".format(data))
     return data.encode('ascii', 'ignore').decode('ascii') if data is not None else None
 
 

@@ -49,12 +49,12 @@ def main():
     df = get_bq_data_for_inference(ECOSYSTEM, day_count, date_range)
     logging.info("Copleted getting data for the big query")
     triage_subdir = _get_triage_subdir(start_time, end_time)
-    save_data_to_csv(df, True, "bq_data", triage_subdir, ECOSYSTEM, "bq_dump")
-    logging.info("Saved bq data to s3 completed")
+    # save_data_to_csv(df, True, "bq_data", triage_subdir, ECOSYSTEM, "bq_dump")
+    # logging.info("Saved bq data to s3 completed")
     df = run_inference(df, CVE_MODEL_TYPE)
-    logging.info("Copleted getting inference result")
-    save_data_to_csv(df, True, "inference_output", triage_subdir, ECOSYSTEM, "inference_dump")
-    logging.info("Saved inference data to s3 completed")
+    # logging.info("Copleted getting inference result")
+    # save_data_to_csv(df, True, "inference_output", triage_subdir, ECOSYSTEM, "inference_dump")
+    # logging.info("Saved inference data to s3 completed")
 
     write_output_csv(
         start_time,
