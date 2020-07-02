@@ -40,8 +40,8 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
     df.loc[:, "ecosystem"] = ecosystem
     # df['title'] = "test"
     # df['body'] = "body"
-    df.loc[:, "title"] = df.apply(lambda x: _handle_unicode_str_data(x['title']), axis=1)
-    df.loc[:, "body"] = df.apply(lambda x: _handle_unicode_str_data(x['body']), axis=1)
+    df.loc[:, "title"] = df.apply(lambda x: _handle_unicode_str_data(x['title'], x['api_url']), axis=1)
+    df.loc[:, "body"] = df.apply(lambda x: _handle_unicode_str_data(x['body'], x['api_url']), axis=1)
     columns = [
         "repo_name",
         "event_type",
@@ -82,9 +82,15 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
     return df
 
 
-def _handle_unicode_str_data(data) -> str:
+def _handle_unicode_str_data(data, url) -> str:
     """Handle unicode changaracter by encoding/decoding string with ascii."""
-    return data.decode('utf-8') if data is not None else None
+
+    _logger.info(" api_url : {}".format(url))
+    _logger.info(" data before update : {}".format(data))
+    updated_data = data.encode('ascii', 'ignore').decode('ascii')
+    _logger.info(" data after update : {}".format(updated_data))
+
+    return updated_data if data is not None else None
     # return data.encode('ascii', 'ignore').decode('ascii') if data is not None else None
 
 
