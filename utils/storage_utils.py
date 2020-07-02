@@ -84,13 +84,9 @@ def write_output_csv(start_time, end_time, cve_model_type, ecosystem, df, s3_upl
 
 def _handle_unicode_str_data(data) -> str:
     """Handle unicode changaracter by encoding/decoding string with ascii."""
-    if isinstance(data, str):
-        _logger.info("ordinary string {}".format(data))
-    elif isinstance(data, unicode):
-        _logger.info("unicode string {}".format(data))
-    else:
-        _logger.info("not a string {}".format(data))
-    return data.encode('ascii', 'ignore').decode('ascii') if data is not None else None
+    return data.decoe('utf-8') if data is not None else None
+    # return data.encode('ascii', 'ignore').decode('ascii') if data is not None else None
+
 
 
 def get_file_prefix(cve_model_type: str) -> str:
