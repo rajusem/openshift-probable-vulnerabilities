@@ -13,8 +13,8 @@ import pandas as pd
 from utils import aws_utils as aws
 from utils import cloud_constants as cc
 from utils.bq_utils import get_bq_data_for_inference
-from utils.storage_utils import write_output_csv
-from utils.api_util import save_data_to_db, report_failures, read_probable_cve_data
+from utils.storage_utils import write_output_csv, save_data_to_csv
+from utils.api_util import save_data_to_db, report_failures, read_probable_cve_data, _get_triage_subdir
 
 daiquiri.setup(level=logging.INFO)
 _logger = daiquiri.getLogger(__name__)
@@ -47,7 +47,15 @@ def main():
     )
 
     df = get_bq_data_for_inference(ECOSYSTEM, day_count, date_range)
+    logging.info("Copleted getting data for the big query")
+    triage_subdir = _get_triage_subdir(start_time, end_time)
+    save_data_to_csv(df, True, "bq_data", triage_subdir, ECOSYSTEM, "bq_dump")
+    logging.info("Saved bq data to s3 completed")
     df = run_inference(df, CVE_MODEL_TYPE)
+    logging.info("Copleted getting inference result")
+    save_data_to_csv(df, True, "inference_output", triage_subdir, ECOSYSTEM, "inference_dump")
+    logging.info("Saved inference data to s3 completed")
+
     write_output_csv(
         start_time,
         end_time,
