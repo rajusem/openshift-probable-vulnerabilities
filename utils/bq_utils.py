@@ -358,6 +358,9 @@ def get_bq_data_for_inference(ecosystem, day_count, date_range) -> pd.DataFrame:
     )
     df = df[cols]
 
+    import sys
+    _logger.info("Python version : {}".format(str(sys.version_info[0])))
+    _logger.info("Panda version : {}".format(pd.__version__))
     _logger.info("Copleted getting data for the big query")
     save_data_to_csv(df, True, "bq_data", "test", ecosystem, "bq_dump")
     _logger.info("Saved bq data to s3 completed")
