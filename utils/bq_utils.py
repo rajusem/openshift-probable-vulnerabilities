@@ -362,7 +362,23 @@ def get_bq_data_for_inference(ecosystem, day_count, date_range) -> pd.DataFrame:
     _logger.info("Python version : {}".format(str(sys.version_info[0])))
     _logger.info("Panda version : {}".format(pd.__version__))
     _logger.info("Copleted getting data for the big query")
-    save_data_to_csv(df, True, "bq_data", "test", ecosystem, "bq_dump")
+
+    unicode_records = []
+    unicode_records.append('https://api.github.com/repos/code-ready/crc/issues/1338')
+    unicode_records.append('https://api.github.com/repos/terraform-providers/terraform-provider-azurerm/issues/7454')
+    unicode_records.append('https://api.github.com/repos/code-ready/crc/issues/1338')
+    unicode_records.append('https://api.github.com/repos/helm/helm/issues/8385')
+    unicode_records.append('https://api.github.com/repos/kubernetes/autoscaler/issues/2858')
+    unicode_df = df[df['api_url'].isin(unicode_records)]
+
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.width', None)
+    pd.set_option('display.max_colwidth', -1)
+
+    _logger.info(unicode_df.to_string())
+
+    save_data_to_csv(unicode_df, True, "bq_data", "test", ecosystem, "bq_dump")
     _logger.info("Saved bq data to s3 completed")
 
     if df.empty:
