@@ -376,7 +376,7 @@ def get_bq_data_for_inference(ecosystem, day_count, date_range) -> pd.DataFrame:
     pd.set_option('display.width', None)
     pd.set_option('display.max_colwidth', -1)
 
-    _logger.info(unicode_df.to_string())
+    _logger.info(unicode_df.head(10).to_string())
 
     save_data_to_csv(unicode_df, True, "bq_data", "test", ecosystem, "bq_dump")
     _logger.info("Saved bq data to s3 completed")

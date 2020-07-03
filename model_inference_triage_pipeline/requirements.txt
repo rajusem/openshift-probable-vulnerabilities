@@ -28,12 +28,12 @@ docutils==0.14            # via botocore
 filelock==3.0.12          # via transformers
 fsspec==0.7.2             # via s3fs
 gast==0.2.2               # via tensorflow
-google-api-core==1.11.1   # via google-cloud-bigquery, google-cloud-core
-google-auth==1.6.3        # via google-api-core
-google-cloud-bigquery==1.12.1  # via -r requirements.in
-google-cloud-core==1.0.0  # via google-cloud-bigquery
+google-api-core==1.14.3   # via google-cloud-bigquery, google-cloud-core
+google-auth==1.8.1        # via google-api-core
+google-cloud-bigquery==1.22.0  # via -r requirements.in
+google-cloud-core==1.1.0  # via google-cloud-bigquery
 google-pasta==0.1.8       # via tensorflow
-google-resumable-media==0.3.2  # via google-cloud-bigquery
+google-resumable-media==0.5.0  # via google-cloud-bigquery
 googleapis-common-protos==1.6.0  # via google-api-core
 grpcio==1.21.1            # via tensorboard, tensorflow
 h5py==2.9.0               # via keras, keras-applications
