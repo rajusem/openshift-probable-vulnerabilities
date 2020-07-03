@@ -383,9 +383,9 @@ def get_bq_data_for_inference(ecosystem, day_count, date_range) -> pd.DataFrame:
     temp_df = pd.DataFrame(test_list, columns=['col_A'])
     save_data_to_csv(temp_df, True, "bq_data", "test", ecosystem, "dummy")
     _logger.info("Saved dummy data to s3 completed")
-
-    save_data_to_csv(df, True, "bq_data", "test", ecosystem, "bq")
-    _logger.info("Saved bq data to s3 completed")
+    #
+    # save_data_to_csv(df, True, "bq_data", "test", ecosystem, "bq")
+    # _logger.info("Saved bq data to s3 completed")
 
     if df.empty:
         _logger.warn("Nothing to predict today :)")
